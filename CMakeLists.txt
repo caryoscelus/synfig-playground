@@ -20,6 +20,7 @@ find_package(synfig REQUIRED)
 ## TODO: write some macros
 
 set(MODS_ENABLED
+    timecurve
 )
 
 ## Process selected modules
