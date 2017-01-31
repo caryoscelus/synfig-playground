@@ -21,6 +21,7 @@ find_package(synfig REQUIRED)
 
 set(MODS_ENABLED
     timecurve
+    skeleton
 )
 
 ## Process selected modules
