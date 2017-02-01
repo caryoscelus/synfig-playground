@@ -152,7 +152,9 @@ SkeletonInfluence::operator()(Time time) const
 		}
 	);
 
-	return ValueBase(path_valuebase);
+	auto result = ValueBase(path_valuebase);
+	result.set_loop((*path_)(time).get_loop());
+	return result;
 }
 
 bool
