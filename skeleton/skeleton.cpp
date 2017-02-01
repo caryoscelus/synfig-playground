@@ -24,8 +24,10 @@
 #include <synfig/blinepoint.h>
 #include <synfig/bone.h>
 #include <synfig/valueoperations.h>
+#include <synfig/weightedvalue.h>
 #include <synfig/valuenodes/valuenode_const.h>
 #include <synfig/valuenodes/valuenode_staticlist.h>
+#include <synfig/valuenodes/valuenode_weightedaverage.h>
 #include <synfig/valuenodes/valuenode_bone.h>
 #include <synfig/valuenodes/valuenode_bonelink.h>
 
@@ -112,6 +114,30 @@ SkeletonInfluence::operator()(Time time) const
 				)
 			);
 			bline_point = (*bone_link)(time).get(BLinePoint());
+		}
+		else if (affecting_bones.size() > 1)
+		{
+			auto average = new ValueNode_WeightedAverage(type_bline_point);
+			for (auto const& bone_valuenode : affecting_bones)
+			{
+				auto bone_link = ValueNode_BoneLink::create(BLinePoint());
+				bone_link->set_link(
+					"bone",
+					ValueNode_Const::create(ValueBase(bone_valuenode))
+				);
+				bone_link->set_link(
+					"base_value",
+					ValueNode_Const::create(
+						ValueTransformation::back_transform(
+							bone_link->get_bone_transformation(Time(0)),
+							bline_point
+						)
+					)
+				);
+				auto weighted = ValueNode_Const::create(WeightedValue<BLinePoint>(1, (*bone_link)(time).get(BLinePoint())));
+				average->add(weighted);
+			}
+			bline_point = (*average)(time).get(BLinePoint());
 		}
 	}
 
