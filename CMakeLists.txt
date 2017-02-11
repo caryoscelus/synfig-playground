@@ -34,9 +34,9 @@ foreach(MOD IN ITEMS ${MODS_ENABLED})
     add_subdirectory(${MOD})
 endforeach(MOD)
 
-file(WRITE playground.lst ${SYNFIG_MODULES_CONTENT})
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/playground.lst ${SYNFIG_MODULES_CONTENT})
 
 install(
-    FILES playground.lst
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/playground.lst
     DESTINATION etc/synfig/synfig_modules.cfg.d
 )
