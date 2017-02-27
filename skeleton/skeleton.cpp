@@ -71,12 +71,15 @@ SkeletonInfluence::operator()(Time time) const
 	Skeleton skeleton;
 	{
 		auto p = ValueNode_StaticList::Handle::cast_dynamic(skeleton_);
-		for (int i = 0; i < p->link_count(); ++i)
+		if (p)
 		{
-			auto bone_node =
-			ValueNode_Bone::Handle::cast_dynamic(p->get_link(i));
-			if (!bone_node.empty())
-				skeleton.push_back(bone_node);
+			for (int i = 0; i < p->link_count(); ++i)
+			{
+				auto bone_node =
+				ValueNode_Bone::Handle::cast_dynamic(p->get_link(i));
+				if (!bone_node.empty())
+					skeleton.push_back(bone_node);
+			}
 		}
 	}
 
